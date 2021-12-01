@@ -34,7 +34,6 @@ var Rotation = require('./rotation');
  */
 function GrantManager (config) {
   this.realmUrl = config.realmUrl;
-  this.authorizedRealmUrls = config.authorizedRealmUrls;
   this.clientId = config.clientId;
   this.secret = config.secret;
   this.publicKey = config.publicKey;
@@ -43,6 +42,7 @@ function GrantManager (config) {
   this.notBefore = 0;
   this.rotation = new Rotation(config);
   this.verifyTokenAudience = config.verifyTokenAudience;
+  this.authorizedRealmUrls = config.authorizedRealmUrls.map(url => urlJoin(url, `auth/realms/${config.realm}`)).push(this.realmUrl);
 }
 
 /**
@@ -415,8 +415,6 @@ GrantManager.prototype.validateGrant = function validateGrant (grant) {
  * @return {Promise} That resolve a token
  */
 GrantManager.prototype.validateToken = function validateToken (token, expectedType) {
-  const formatedAuthorizedRealmUrls = this.authorizedRealmUrls.map(url => urlJoin(url, 'auth/realms/mediascreen'));
-  formatedAuthorizedRealmUrls.push(this.realmUrl); // Adding existing check
   return new Promise((resolve, reject) => {
     if (!token) {
       reject(new Error('invalid token (missing)'));
@@ -428,7 +426,7 @@ GrantManager.prototype.validateToken = function validateToken (token, expectedTy
       reject(new Error('invalid token (wrong type)'));
     } else if (token.content.iat < this.notBefore) {
       reject(new Error('invalid token (stale token)'));
-    } else if (!formatedAuthorizedRealmUrls.includes(token.content.iss)) {
+    } else if (!this.authorizedRealmUrls.includes(token.content.iss)) {
       reject(new Error('invalid token (wrong ISS)'));
     } else {
       var audienceData = Array.isArray(token.content.aud) ? token.content.aud : [token.content.aud];

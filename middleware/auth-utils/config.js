@@ -148,6 +148,12 @@ Config.prototype.configure = function configure (config) {
   this.bearerOnly = resolveValue(config['bearer-only'] || config.bearerOnly || false);
 
   /**
+   * Authorized URL.
+   * @type {String[]}
+   */
+  this.authorizedRealmUrls = resolveValue(config['authorizedRealmUrls'] || config.authorizedRealmUrls || []);
+
+  /**
     * Formatted public-key.
     * @type {String}
     */
