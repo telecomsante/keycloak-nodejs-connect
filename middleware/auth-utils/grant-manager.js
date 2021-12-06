@@ -42,7 +42,7 @@ function GrantManager (config) {
   this.notBefore = 0;
   this.rotation = new Rotation(config);
   this.verifyTokenAudience = config.verifyTokenAudience;
-  this.authorizedRealmUrls = config.authorizedRealmUrls.map(url => urlJoin(url, `auth/realms/${config.realm}`)).push(this.realmUrl);
+  this.authorizedRealmUrls = config.authorizedRealmUrls.map(url => urlJoin(url, `auth/realms/${config.realm}`)).concat(this.realmUrl);
 }
 
 /**
