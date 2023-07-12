@@ -1,5 +1,5 @@
 {
-  "name": "@hoppen/keycloak-connect",
+  "name": "keycloak-connect-hoppen",
   "version": "16.0.2",
   "description": "Keycloak Connect Middleware",
   "homepage": "http://keycloak.org",
